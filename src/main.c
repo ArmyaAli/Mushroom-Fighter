@@ -3,7 +3,7 @@
  *  Title: Audio Visualizer
  *  Description: Visualize audio based on some quantity that represents the audio signal
  ********************************************************************************************/
-
+#include <stdio.h>
 #include "raylib.h"
 
 int main(void)
@@ -17,6 +17,26 @@ int main(void)
 
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
   //--------------------------------------------------------------------------------------
+  InitAudioDevice();
+
+  if (IsAudioDeviceReady())
+  {
+    printf("ready\n");
+  }
+
+  Wave sample = LoadWave("example.wav");
+  if (IsWaveReady(sample))
+  {
+    printf("ready\n");
+  }
+
+  Sound audio = LoadSoundFromWave(sample);
+  if (IsSoundReady(audio))
+  {
+    printf("ready\n");
+  }
+
+  PlaySound(audio);
 
   while (!WindowShouldClose())
   {

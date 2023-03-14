@@ -1,7 +1,7 @@
 /*******************************************************************************************
  *  Name: Ali Umar
- *  Title: Audio Visualizer
- *  Description: Visualize audio based on some quantity that represents the audio signal
+ *  Title: Mushroom Fighter 
+ *  Description: A small fighting game arund the theme of mushrooms 
  ********************************************************************************************/
 
 #include <stdio.h>
@@ -12,7 +12,7 @@ int main(void)
   const int screenWidth = 800;
   const int screenHeight = 450;
 
-  InitWindow(screenWidth, screenHeight, "raylib [core] example - 2d camera");
+  InitWindow(screenWidth, screenHeight, "Mushroom Fighter");
 
   SetTargetFPS(60); 
 

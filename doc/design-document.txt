@@ -1,0 +1,4 @@
+2D Fighting game
+2 Player functionality to start off with (I don't want to code an bot yet)
+Mushroom based fighters
+Controller Support

@@ -3,11 +3,11 @@ INCLUDE = -Iinclude
 LIBS = -l:raylib.a -lWinmm -lopengl32 -lgdi32
 LIB_PATHS= -Llib
 
-default:	main.c 
-	gcc ${FLAGS} main.c ${LIB_PATHS} ${LIBS} ${INCLUDE} -o .\build\av.exe && .\build\av.exe
+default:	src\main.c 
+	gcc ${FLAGS} src\main.c ${LIB_PATHS} ${LIBS} ${INCLUDE} -o .\build\av.exe && .\build\av.exe
 
-build:	main.c 
-	gcc ${FLAGS} main.c -o .\build\av.exe
+build:	src\main.c 
+	gcc ${FLAGS} src\main.c -o .\build\av.exe
 
-run:	main.c 
+run:	src\main.c 
 	.\build\av.exe

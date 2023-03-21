@@ -1,41 +1,70 @@
 #include "animations.h"
 
 // STATE MACHINE
-// rotate to the left if going right and right if going left
-// rotate back to center
-// if rotated left earlier, rotate to the right. If rotated right ealier,
-// rotate to the left.
 
-typedef enum { PHASE_1, PHASE_2, FINISH } wobble_state;
-int wobble_curr_state = PHASE_1;
+// BEGIN WOBBLE_WALK
+// NOTE NEED TO MAKE STATE that was left off to resume the previous state after
 
-void wobble_walk(int* rotation) {
-  const int rotate_factor = 3;
-
-  // clang-format off
-
-  if (wobble_curr_state == PHASE_1) { (*rotation)+=rotate_factor; }
-  if (wobble_curr_state == PHASE_2) { (*rotation)-=rotate_factor; }
-  if (wobble_curr_state == FINISH)  { (*rotation)+=rotate_factor; }
-
-  if (wobble_curr_state == PHASE_1) {
-    if (*rotation < 30)  { wobble_curr_state = PHASE_1; }
-    if (*rotation >= 30) { wobble_curr_state = PHASE_2; }
+// clang-format off
+state_fn* state_lookup(WOBBLE_WALK_STATE state) {
+  switch(state) {
+    case RIGHT_STATE: return right;
+    case LEFT_STATE:  return left;
+    case END_STATE:   return end;
   }
-  
-  if(wobble_curr_state == PHASE_2) {
-    if (*rotation > -60) { wobble_curr_state = PHASE_2; }
-    if (*rotation < -60) { wobble_curr_state = FINISH;  }
-  }
-  
-  if(wobble_curr_state == FINISH) {
-    if (*rotation < -30) { wobble_curr_state = PHASE_1; }
-    if (*rotation >  0)  { wobble_curr_state = FINISH;  }
-  }
+}
+// clang-format off
 
-  // clang-format off
+int right(struct state_chain* state) {
+  if (*(state->rotation) < 90) {
+    *(state->rotation) += 10;
+    printf("RIGHT: %f\n", *(state->rotation));
+    return RIGHT_STATE;
+  }
+  state->next = left;
+  return LEFT_STATE;
 }
 
-void basic_attack() {
-
+int left(struct state_chain* state) {
+  if (*(state->rotation) > 0) {
+    *(state->rotation) -= 10;
+    printf("LEFT: %f\n", *(state->rotation));
+    return LEFT_STATE;
+  }
+  printf("LEFT: %f\n", *(state->rotation));
+  state->next = end;
+  return END_STATE;
 }
+
+int end(struct state_chain* state) {
+  if (*(state->rotation) > -45) {
+    *(state->rotation) -= 10;
+    printf("END: %f\n", *(state->rotation));
+    return END_STATE;
+  }
+  state->next = NULL;
+  return NOP;
+}
+
+WOBBLE_WALK_STATE wobble_walk(float* rotation, float dt, WOBBLE_WALK_STATE prev_state) {
+  WOBBLE_WALK_STATE start_state = RIGHT_STATE;
+  WOBBLE_WALK_STATE end_state   = NOP;
+  state_fn* callback = NULL;
+  callback = state_lookup(start_state);
+
+  if (prev_state != NOP)
+    callback = state_lookup(prev_state);
+
+  printf("%d", end_state);
+  struct state_chain state = {callback, rotation};
+
+  if (state.next)
+    end_state = state.next(&state);
+
+  return end_state;
+}
+
+// END WOBBLE_WALK
+
+void kick_attack() {}
+void shroom_cap_headbutt() {}
